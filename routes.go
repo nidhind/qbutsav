@@ -12,9 +12,9 @@ func mountRoutes(app *gin.Engine) {
 	app.GET("/status", statusHandler)
 
 	// Get user profile
-	app.GET("/teams/", getTeamProfiles)
+	app.GET("/teams", getTeamProfiles)
 	// Add new user
-	app.POST("/users", addUserHandler)
+	app.POST("/teams", createNewTeam)
 
 	// Handle 404
 	app.NoRoute(func(c *gin.Context) {

@@ -11,7 +11,7 @@ type LoginRes struct {
 type TeamProfileRes struct {
 	Code    string `json:"code"`
 	Status  string `json:"status"`
-	Payload []TeamProfile
+	Payload *[]TeamProfile
 }
 
 // team profile

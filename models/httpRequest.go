@@ -2,12 +2,15 @@
 
 package models
 
-// For user self registeration
-type SignUpReq struct {
-	FirstName string `json:"firstName"`
-	LastName  string `json:"lastName"`
-	EmailId   string `json:"emailId"`
-	Password  string `json:"password"`
+// For new team registeration
+type NewTeam struct {
+	Name             string   `json:"name"`
+	ID               string   `json:"id"`
+	Captain          string   `json:"captain"`
+	Owner            string   `json:"owner"`
+	Points           int      `json:"points"`
+	AccquiredMembers []string `json:"accquiredMembers"`
+	RelievedMembers  []string `json:"relievedMembers"`
 }
 
 // For accesstoken request

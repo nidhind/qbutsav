@@ -8,11 +8,12 @@ type Team struct {
 	ID               string   `bson:"id"`
 	Captain          string   `bson:"captain"`
 	Owner            string   `bson:"owner"`
+	Points           int    `bson:"points"`
 	AccquiredMembers []string `bson:"accquiredMembers"`
 	RelievedMembers  []string `bson:"relievedMembers"`
 }
 
-func GetAllTeams() ([]Team, error) {
+func GetAllTeams() (*[]Team, error) {
 	s := GetSession()
 	defer s.Close()
 	c := s.DB(DB).C(TeamsColl)
@@ -20,7 +21,18 @@ func GetAllTeams() ([]Team, error) {
 	var teams []Team
 	err := c.Find(nil).All(&teams)
 	if err != nil {
-		return []Team{}, err
+		return &[]Team{}, err
 	}
-	return teams, nil
+	return &teams, nil
+}
+
+func CreateNewTeam(t *Team) error {
+	s := GetSession()
+	defer s.Close()
+	c := s.DB(DB).C(TeamsColl)
+	err := c.Insert(t)
+	if err != nil {
+		return err
+	}
+	return nil
 }
