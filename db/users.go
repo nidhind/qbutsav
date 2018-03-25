@@ -32,41 +32,41 @@ type InsertUserQuery struct {
 	PreviousLevelFinishTime time.Time `bson:"previousLevelFinishTime"`
 }
 
-func GetUserByEmail(emailId string) (User, error) {
+func GetUserByEmail(emailId string) (Team, error) {
 	s := GetSession()
 	defer s.Close()
 	c := s.DB(DB).C(UsersColl)
 
-	var user User
+	var user Team
 	err := c.Find(bson.M{"email": emailId}).One(&user)
 	if err != nil {
-		return User{}, err
+		return Team{}, err
 	}
 	return user, nil
 }
 
-func GetUserByAccessToken(t string) (User, error) {
+func GetUserByAccessToken(t string) (Team, error) {
 	s := GetSession()
 	defer s.Close()
 	c := s.DB(DB).C(UsersColl)
 
-	var user User
+	var user Team
 	err := c.Find(bson.M{"accessToken": t}).One(&user)
 	if err != nil {
-		return User{}, err
+		return Team{}, err
 	}
 	return user, nil
 }
 
-func GetUserLeaderBoard(l int) (*[]User, error) {
+func GetUserLeaderBoard(l int) (*[]Team, error) {
 	s := GetSession()
 	defer s.Close()
 	c := s.DB(DB).C(UsersColl)
 
-	var users []User
+	var users []Team
 	err := c.Find(bson.M{}).Sort("-level", "previousLevelFinishTime").Limit(l).All(&users)
 	if err != nil {
-		return &[]User{}, err
+		return &[]Team{}, err
 	}
 	return &users, nil
 }

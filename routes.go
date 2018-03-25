@@ -10,8 +10,9 @@ func mountRoutes(app *gin.Engine) {
 
 	// Get server status
 	app.GET("/status", statusHandler)
+
 	// Get user profile
-	app.GET("/users/profile", getUserProfile)
+	app.GET("/teams/", getTeamProfiles)
 	// Add new user
 	app.POST("/users", addUserHandler)
 

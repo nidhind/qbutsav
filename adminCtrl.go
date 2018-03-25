@@ -96,25 +96,3 @@ func DoesEmailExists(id string) bool {
 	// User exists
 	return true
 }
-
-// Fetch and serve user profile
-func getUserProfile(c *gin.Context) {
-	// This is a authenticated route
-	// User will be already present in context
-	i, _ := c.Get("user")
-	u := i.(*db.User)
-
-	r := models.ProfileRes{
-		Code:   "0",
-		Status: "success",
-		Payload: &models.UserProfile{
-			FirstName:               u.FirstName,
-			LastName:                u.LastName,
-			Email:                   u.Email,
-			Level:                   u.Level,
-			AccessLevel:             u.AccessLevel,
-			PreviousLevelFinishTime: u.PreviousLevelFinishTime.String(),
-		},
-	}
-	c.JSON(http.StatusOK, &r)
-}

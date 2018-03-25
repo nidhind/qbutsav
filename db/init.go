@@ -6,7 +6,7 @@ import (
 	"gopkg.in/mgo.v2"
 )
 
-const DB = "qbutzav_v1"
+const DB = "qbutsav_v1"
 
 var Session *mgo.Session
 

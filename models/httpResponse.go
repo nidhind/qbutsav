@@ -8,22 +8,20 @@ type LoginRes struct {
 	}
 }
 
-type ProfileRes struct {
+type TeamProfileRes struct {
 	Code    string `json:"code"`
 	Status  string `json:"status"`
-	Payload interface{}
+	Payload []TeamProfile
 }
 
-// User schema for users collection
-type UserProfile struct {
-	FirstName               string `json:"first_name"`
-	LastName                string `json:"last_name"`
-	Email                   string `json:"email"`
-	Level                   int    `json:"level"`
-	LevelImage              string `json:"level_image"`
-	LevelClue               string `json:"level_clue"`
-	AccessLevel             string ` json:"access_level"`
-	PreviousLevelFinishTime string `json:"previous_level"`
+// team profile
+type TeamProfile struct {
+	Name             string   `json:"name"`
+	ID               string   `json:"id"`
+	Captain          string   `json:"captain"`
+	Owner            string   `json:"owner"`
+	AccquiredMembers []string `json:"accquiredMembers"`
+	RelievedMembers  []string `json:"relievedMembers"`
 }
 
 // Leader board response model
