@@ -10,14 +10,17 @@ const UsersColl = "users"
 
 // User schema for users collection
 type User struct {
-	FirstName               string    `bson:"firstName"`
-	LastName                string    `bson:"lastName"`
-	Email                   string    `bson:"email"`
-	Password                string    `bson:"password"`
-	Level                   int       `bson:"level"`
-	AccessLevel             string    `bson:"accessLevel"`
-	AccessToken             string    `bson:"accessToken"`
-	PreviousLevelFinishTime time.Time `bson:"previousLevelFinishTime"`
+	Id          string `bson:"id"`
+	FirstName   string    `bson:"firstName"`
+	LastName    string    `bson:"lastName"`
+	Email       string    `bson:"email"`
+	Image       string  `bson:"image"`
+	Password    string    `bson:"password"`
+	AccessLevel string    `bson:"accessLevel"`
+	AccessToken string    `bson:"accessToken"`
+	Points      int `bson:"points"`
+	Status      string `bson:"status"`
+	UpdatedAt   int64 `bson:"updatedAt"`
 }
 
 // Model for new user insert query
@@ -32,17 +35,17 @@ type InsertUserQuery struct {
 	PreviousLevelFinishTime time.Time `bson:"previousLevelFinishTime"`
 }
 
-func GetUserByEmail(emailId string) (Team, error) {
+func GetAllUsers() (*[]User, error) {
 	s := GetSession()
 	defer s.Close()
 	c := s.DB(DB).C(UsersColl)
 
-	var user Team
-	err := c.Find(bson.M{"email": emailId}).One(&user)
+	var users []User
+	err := c.Find(nil).All(&users)
 	if err != nil {
-		return Team{}, err
+		return &[]User{}, err
 	}
-	return user, nil
+	return &users, nil
 }
 
 func GetUserByAccessToken(t string) (Team, error) {
@@ -122,7 +125,7 @@ func UpdatePasswordByEmailId(e, p string) error {
 	return nil
 }
 
-func UpdateRoleByEmailId(e string,r string) error {
+func UpdateRoleByEmailId(e string, r string) error {
 	s := GetSession()
 	defer s.Close()
 	c := s.DB(DB).C(UsersColl)
