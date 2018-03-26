@@ -113,7 +113,7 @@ func lockUserById(c *gin.Context) {
 	}
 
 	// Update and lock the user
-	err = db.UpdateUserStatusById(id, "in_progress")
+	err = db.UpdateUserStatusById(id, "in_progress", 0)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"status":  "error",
@@ -170,7 +170,7 @@ func unlockUserById(c *gin.Context) {
 	}
 
 	// Update and unlock the user
-	err = db.UpdateUserStatusById(id, "waiting")
+	err = db.UpdateUserStatusById(id, "waiting", 0)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"status":  "error",

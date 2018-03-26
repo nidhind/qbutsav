@@ -6,8 +6,8 @@ type LoginRes struct {
 	Code    string `json:"code"`
 	Status  string `json:"status"`
 	Payload struct {
-		AccessToken string `json:"access_token"`
-	}
+				AccessToken string `json:"access_token"`
+			}
 }
 
 type TeamProfileRes struct {
@@ -22,6 +22,7 @@ type TeamProfile struct {
 	ID               string   `json:"id"`
 	Captain          string   `json:"captain"`
 	Owner            string   `json:"owner"`
+	Points           int`json:"points"`
 	AccquiredMembers []db.TeamMembers `json:"accquiredMembers"`
 	RelievedMembers  []db.TeamMembers `json:"relievedMembers"`
 }

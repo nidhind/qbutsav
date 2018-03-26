@@ -33,6 +33,7 @@ func getTeamProfiles(c *gin.Context) {
 			Name : v.Name,
 			Captain : v.Captain,
 			Owner : v.Owner,
+			Points:v.Points,
 			AccquiredMembers : v.AccquiredMembers,
 			RelievedMembers : v.RelievedMembers,
 		})
@@ -107,6 +108,7 @@ func allocateUserToTeam(c *gin.Context) {
 	}
 	id := allocateReq.UserId
 	team := allocateReq.TeamId
+	points:=allocateReq.Points
 
 	// Check if user exists
 	u, err := db.GetUserById(id)
@@ -172,7 +174,7 @@ func allocateUserToTeam(c *gin.Context) {
 	}
 
 	// Set new team points
-	t.Points = t.Points - u.Points
+	t.Points = t.Points - points
 	// Add user to team
 	t.AccquiredMembers = append(t.AccquiredMembers, db.TeamMembers{
 		Id:u.Id,
@@ -194,7 +196,7 @@ func allocateUserToTeam(c *gin.Context) {
 	}
 
 	// Update and unlock the user
-	err = db.UpdateUserStatusById(u.Id, "waiting")
+	err = db.UpdateUserStatusById(u.Id, "done", points)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"status":  "error",

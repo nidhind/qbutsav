@@ -17,6 +17,7 @@ type NewTeam struct {
 type AllocateUserReq struct {
 	UserId    string `json:"user_id"`
 	TeamId string `json:"team_id"`
+	Points int `json:"points"`
 }
 
 //For adding new puzzles

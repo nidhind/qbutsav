@@ -62,14 +62,16 @@ func GetUsersByStatus(st string) ([]User, error) {
 	return users, nil
 }
 
-
-func UpdateUserStatusById(id string, st string) error {
+func UpdateUserStatusById(id string, st string, pt int) error {
 	s := GetSession()
 	defer s.Close()
 	c := s.DB(DB).C(UsersColl)
 
 	q := bson.M{"id": id}
-	u := bson.M{"$set": bson.M{"status": st}}
+	u := bson.M{"$set": bson.M{
+		"status": st,
+		"points": pt,
+	}}
 	err := c.Update(&q, &u)
 	if err != nil {
 		return err
