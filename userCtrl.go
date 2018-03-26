@@ -53,3 +53,78 @@ func getUserProfiles(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, &r)
 }
+
+func lockUserById(c *gin.Context) {
+	id := c.Param("id")
+	if id == "" {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"status":  "error",
+			"code":    "400",
+			"message": "Invalid userid",
+		})
+		return
+	}
+	// Check if user exists
+	u, err := db.GetUserById(id)
+	if err != nil && err.Error() == "not found" {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"status":  "error",
+			"code":    "400",
+			"message": "Invalid userid",
+		})
+		return
+	} else if err!=nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"status":  "error",
+			"code":    "500",
+			"message": "Internal server error",
+		})
+		return
+	}
+
+	//Check if user is already locked
+	if u.Status == "in_progress" {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"status":  "error",
+			"code":    "400",
+			"message": "User already locked",
+		})
+		return
+	}
+
+	// Check if other users are already locked
+	ul, err := db.GetUsersByStatus("in_progress")
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"status":  "error",
+			"code":    "500",
+			"message": "Internal server error",
+		})
+		return
+	}
+	if len(ul) != 0 {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"status":  "error",
+			"code":    "400",
+			"message": "Some other User is already locked",
+		})
+		return
+	}
+
+	// Update and lock the user
+	err = db.UpdateUserStatusById(id, "in_progress")
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"status":  "error",
+			"code":    "500",
+			"message": "Internal server error",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"code": "0",
+		"message": "locked",
+		"status": "success",
+	})
+}

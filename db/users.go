@@ -23,18 +23,6 @@ type User struct {
 	UpdatedAt   int64 `bson:"updatedAt"`
 }
 
-// Model for new user insert query
-type InsertUserQuery struct {
-	FirstName               string    `bson:"firstName"`
-	LastName                string    `bson:"lastName"`
-	Email                   string    `bson:"email"`
-	Password                string    `bson:"password"`
-	Level                   int       `bson:"level"`
-	AccessLevel             string    `bson:"accessLevel"`
-	AccessToken             string    `bson:"accessToken"`
-	PreviousLevelFinishTime time.Time `bson:"previousLevelFinishTime"`
-}
-
 func GetAllUsers() (*[]User, error) {
 	s := GetSession()
 	defer s.Close()
@@ -48,49 +36,40 @@ func GetAllUsers() (*[]User, error) {
 	return &users, nil
 }
 
-func GetUserByAccessToken(t string) (Team, error) {
+func GetUserById(id string) (User, error) {
 	s := GetSession()
 	defer s.Close()
 	c := s.DB(DB).C(UsersColl)
 
-	var user Team
-	err := c.Find(bson.M{"accessToken": t}).One(&user)
+	var user User
+	err := c.Find(bson.M{"id": id}).One(&user)
 	if err != nil {
-		return Team{}, err
+		return User{}, err
 	}
 	return user, nil
 }
 
-func GetUserLeaderBoard(l int) (*[]Team, error) {
+func GetUsersByStatus(st string) ([]User, error) {
 	s := GetSession()
 	defer s.Close()
 	c := s.DB(DB).C(UsersColl)
 
-	var users []Team
-	err := c.Find(bson.M{}).Sort("-level", "previousLevelFinishTime").Limit(l).All(&users)
+	var users []User
+	err := c.Find(bson.M{"status": st}).All(&users)
 	if err != nil {
-		return &[]Team{}, err
+		return []User{}, err
 	}
-	return &users, nil
+	return users, nil
 }
 
-func InsertNewUser(u *InsertUserQuery) error {
-	s := GetSession()
-	defer s.Close()
-	c := s.DB(DB).C(UsersColl)
-	err := c.Insert(u)
-	if err != nil {
-		return err
-	}
-	return nil
-}
 
-func UpdateAccessTokenByEmailId(e string, t string) error {
+func UpdateUserStatusById(id string, st string) error {
 	s := GetSession()
 	defer s.Close()
 	c := s.DB(DB).C(UsersColl)
-	q := bson.M{"email": e}
-	u := bson.M{"$set": bson.M{"accessToken": t}}
+
+	q := bson.M{"id": id}
+	u := bson.M{"$set": bson.M{"status": st}}
 	err := c.Update(&q, &u)
 	if err != nil {
 		return err
