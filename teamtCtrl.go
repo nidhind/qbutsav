@@ -206,6 +206,15 @@ func allocateUserToTeam(c *gin.Context) {
 		return
 	}
 
+	ah:=db.AuctionHistory{
+		UserID:u.Id,
+		TeamID:t.ID,
+		TeamPoints:t.Points,
+		UserPoints:points,
+		At:time.Now().Unix(),
+	}
+	go db.InsertAuctionHistory(&ah)
+
 	c.JSON(http.StatusOK, gin.H{
 		"status":  "success",
 		"code":    "0",
