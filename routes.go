@@ -20,6 +20,8 @@ func mountRoutes(app *gin.Engine) {
 	app.GET("/users",getUserProfiles)
 	// Lock user for auction
 	app.GET("/users/lock/:id", lockUserById)
+	// Un-lock user for auction
+	app.DELETE("/users/lock/:id", unlockUserById)
 
 	// Handle 404
 	app.NoRoute(func(c *gin.Context) {
