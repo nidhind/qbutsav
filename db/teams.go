@@ -1,5 +1,7 @@
 package db
 
+import "gopkg.in/mgo.v2/bson"
+
 const TeamsColl = "teams"
 
 // Team schema for users collection
@@ -14,12 +16,12 @@ type Team struct {
 }
 
 type TeamMembers struct {
-	Id          string `bson:"id"`
-	FirstName   string    `bson:"firstName"`
-	LastName    string    `bson:"lastName"`
-	Email       string    `bson:"email"`
-	Image       string  `bson:"image"`
-	UpdatedAt   int64 `bson:"updatedAt"`
+	Id        string `bson:"id"`
+	FirstName string    `bson:"firstName"`
+	LastName  string    `bson:"lastName"`
+	Email     string    `bson:"email"`
+	Image     string  `bson:"image"`
+	UpdatedAt int64 `bson:"updatedAt"`
 }
 
 func GetAllTeams() (*[]Team, error) {
@@ -40,6 +42,32 @@ func CreateNewTeam(t *Team) error {
 	defer s.Close()
 	c := s.DB(DB).C(TeamsColl)
 	err := c.Insert(t)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func GetTeamById(id string) (*Team, error) {
+	s := GetSession()
+	defer s.Close()
+	c := s.DB(DB).C(TeamsColl)
+
+	var teams Team
+	err := c.Find(bson.M{"id":id}).One(&teams)
+	if err != nil {
+		return &Team{}, err
+	}
+	return &teams, nil
+}
+
+func UpdateTeamById(t *Team) error {
+	s := GetSession()
+	defer s.Close()
+	c := s.DB(DB).C(TeamsColl)
+
+	q := bson.M{"id": t.ID}
+	err := c.Update(&q, t)
 	if err != nil {
 		return err
 	}

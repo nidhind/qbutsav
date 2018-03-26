@@ -182,7 +182,7 @@ func unlockUserById(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"code": "0",
-		"message": "locked",
+		"message": "unlocked",
 		"status": "success",
 	})
 }

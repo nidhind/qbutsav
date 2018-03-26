@@ -8,6 +8,7 @@ import (
 	"github.com/nidhind/qbutsav/models"
 	"time"
 	"fmt"
+	"errors"
 )
 
 // Fetch and serve teams profile
@@ -90,4 +91,122 @@ func createNewTeam(c *gin.Context) {
 		"message": "created",
 	})
 
+}
+
+// Allocate user to a team
+func allocateUserToTeam(c *gin.Context) {
+	var allocateReq models.AllocateUserReq
+	err := c.ShouldBindJSON(&allocateReq)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"status":  "error",
+			"code":    "1002",
+			"message": "Error in parsing JSON input",
+		})
+		return
+	}
+	id := allocateReq.UserId
+	team := allocateReq.TeamId
+
+	// Check if user exists
+	u, err := db.GetUserById(id)
+	if err != nil && err.Error() == "not found" {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"status":  "error",
+			"code":    "400",
+			"message": "Invalid userid",
+		})
+		return
+	} else if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"status":  "error",
+			"code":    "500",
+			"message": "Internal server error",
+		})
+		return
+	}
+
+	//Check if user is locked
+	if u.Status != "in_progress" {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"status":  "error",
+			"code":    "1002",
+			"message": "User is not locked",
+		})
+		return
+	}
+
+	// Check if team exists
+	t, err := db.GetTeamById(team)
+	if err != nil && err.Error() == "not found" {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"status":  "error",
+			"code":    "400",
+			"message": "Invalid team id",
+		})
+		return
+	} else if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"status":  "error",
+			"code":    "500",
+			"message": "Internal server error",
+		})
+		return
+	}
+
+	// Check if user is already allocated
+	err = nil
+	for _, au := range t.AccquiredMembers {
+		if au.Id == u.Id {
+			err = errors.New("already_allocated")
+		}
+		break
+	}
+	if err!=nil && err.Error() == "already_allocated" {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"status":  "error",
+			"code":    "400",
+			"message": "User already allocated",
+		})
+		return
+	}
+
+	// Set new team points
+	t.Points = t.Points - u.Points
+	// Add user to team
+	t.AccquiredMembers = append(t.AccquiredMembers, db.TeamMembers{
+		Id:u.Id,
+		FirstName:u.FirstName,
+		LastName:u.LastName,
+		Email:u.Email,
+		Image:u.Image,
+		UpdatedAt:time.Now().Unix(),
+	})
+	// Update Teams
+	err = db.UpdateTeamById(t)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"status":  "error",
+			"code":    "500",
+			"message": "Internal server error",
+		})
+		return
+	}
+
+	// Update and unlock the user
+	err = db.UpdateUserStatusById(u.Id, "waiting")
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"status":  "error",
+			"code":    "500",
+			"message": "Internal server error",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":  "success",
+		"code":    "0",
+		"message": "Allocated",
+	})
 }

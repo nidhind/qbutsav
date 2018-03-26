@@ -13,10 +13,10 @@ type NewTeam struct {
 	RelievedMembers  []string `json:"relievedMembers"`
 }
 
-// For accesstoken request
-type GenAccessToken struct {
-	Email    string `json:"emailId"`
-	Password string `json:"password"`
+// Allopcate user to team
+type AllocateUserReq struct {
+	UserId    string `json:"user_id"`
+	TeamId string `json:"team_id"`
 }
 
 //For adding new puzzles

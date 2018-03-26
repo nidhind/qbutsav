@@ -15,6 +15,8 @@ func mountRoutes(app *gin.Engine) {
 	app.GET("/teams", getTeamProfiles)
 	// Add new team
 	app.POST("/teams", createNewTeam)
+	// Allocate user to a team
+	app.PUT("/teams/user", allocateUserToTeam)
 
 	// Get users list
 	app.GET("/users",getUserProfiles)
