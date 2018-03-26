@@ -1,5 +1,7 @@
 package models
 
+import "github.com/nidhind/qbutsav/db"
+
 type LoginRes struct {
 	Code    string `json:"code"`
 	Status  string `json:"status"`
@@ -20,8 +22,8 @@ type TeamProfile struct {
 	ID               string   `json:"id"`
 	Captain          string   `json:"captain"`
 	Owner            string   `json:"owner"`
-	AccquiredMembers []string `json:"accquiredMembers"`
-	RelievedMembers  []string `json:"relievedMembers"`
+	AccquiredMembers []db.TeamMembers `json:"accquiredMembers"`
+	RelievedMembers  []db.TeamMembers `json:"relievedMembers"`
 }
 
 // User list resposne
