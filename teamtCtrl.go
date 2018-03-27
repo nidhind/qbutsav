@@ -314,7 +314,7 @@ func deallocateUserFromTeam(c *gin.Context) {
 	}
 
 	// Update and unlock the user
-	err = db.UpdateUserStatusById(u.Id, "done", 0)
+	err = db.UpdateUserStatusById(u.Id, "waiting", 0)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"status":  "error",
