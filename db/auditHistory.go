@@ -4,7 +4,9 @@ const AuctionHistoryColl = "auditHistory"
 
 type AuctionHistory struct {
 	UserID     string `bson:"user_id"`
+	UserName string `json:"user_name"`
 	TeamID     string `bson:"team_id"`
+	TeamName string `json:"team_name"`
 	TeamPoints int `bson:"team_points"`
 	UserPoints int `bson:"user_points"`
 	Action string `bson:"action"`

@@ -75,6 +75,8 @@ type TickerRes struct {
 
 type AuctionHistoryRes struct {
 	UserID string `json:"user_id"`
+	UserName string `json:"user_name"`
 	TeamID string `json:"team_id"`
+	TeamName string `json:"team_name"`
 	At     int64 `json:"at"`
 }

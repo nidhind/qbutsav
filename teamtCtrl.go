@@ -327,7 +327,9 @@ func deallocateUserFromTeam(c *gin.Context) {
 
 	ah:=db.AuctionHistory{
 		UserID:u.Id,
+		UserName:fmt.Sprintf("%s %s", u.FirstName, u.LastName),
 		TeamID:t.ID,
+		TeamName:t.Name,
 		TeamPoints:t.Points,
 		UserPoints:u.Points,
 		Action:"deallocation",

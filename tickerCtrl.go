@@ -46,6 +46,7 @@ func tickerHandler(c *gin.Context) {
 		})
 		return
 	}
+if len(u)>0{
 	r.Payload.CurrentAuction.ID = u[0].Id
 	r.Payload.CurrentAuction.FirstName = u[0].FirstName
 	r.Payload.CurrentAuction.LastName = u[0].LastName
@@ -54,6 +55,7 @@ func tickerHandler(c *gin.Context) {
 	r.Payload.CurrentAuction.Status = u[0].Status
 	r.Payload.CurrentAuction.UpdatedAt = u[0].UpdatedAt
 
+}
 	// Fetch audtion history
 	ah, err := db.FetchAuctionHistory()
 	if err != nil {
@@ -67,6 +69,8 @@ func tickerHandler(c *gin.Context) {
 	for _, v := range *ah {
 		t := models.AuctionHistoryRes{}
 		t.UserID = v.UserID
+		t.UserName=v.UserName
+		t.TeamName=v.TeamName
 		t.TeamID = v.TeamID
 		t.At=v.At
 		r.Payload.AuctionHistory = append(r.Payload.AuctionHistory, t)
