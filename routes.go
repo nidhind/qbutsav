@@ -21,7 +21,7 @@ func mountRoutes(app *gin.Engine) {
 	// Get users list
 	app.GET("/users",getUserProfiles)
 	// Lock user for auction
-	app.GET("/users/lock/:id",,authenticateToken, lockUserById)
+	app.GET("/users/lock/:id",authenticateToken, lockUserById)
 	// Un-lock user for auction
 	app.DELETE("/users/lock/:id",authenticateToken, unlockUserById)
 
