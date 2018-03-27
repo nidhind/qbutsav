@@ -10,6 +10,8 @@ func mountRoutes(app *gin.Engine) {
 
 	// Get server status
 	app.GET("/status", statusHandler)
+	// Ticker for client
+	app.GET("ticker", tickerHandler)
 
 	// Get team profile
 	app.GET("/teams",authenticateToken, getTeamProfiles)

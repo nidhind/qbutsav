@@ -1,8 +1,6 @@
 package db
 
 import (
-	"time"
-
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -72,46 +70,6 @@ func UpdateUserStatusById(id string, st string, pt int) error {
 		"status": st,
 		"points": pt,
 	}}
-	err := c.Update(&q, &u)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func UpdateLevelByEmailId(e string, l int, t time.Time) error {
-	s := GetSession()
-	defer s.Close()
-	c := s.DB(DB).C(UsersColl)
-	q := bson.M{"email": e}
-	u := bson.M{"$set": bson.M{"level": l, "previousLevelFinishTime": t}}
-	err := c.Update(&q, &u)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func UpdatePasswordByEmailId(e, p string) error {
-	s := GetSession()
-	defer s.Close()
-	c := s.DB(DB).C(UsersColl)
-	q := bson.M{"email": e}
-	// Update password as well as log out current session
-	u := bson.M{"$set": bson.M{"password": p, "accessToken": ""}}
-	err := c.Update(&q, &u)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func UpdateRoleByEmailId(e string, r string) error {
-	s := GetSession()
-	defer s.Close()
-	c := s.DB(DB).C(UsersColl)
-	q := bson.M{"email": e}
-	u := bson.M{"$set": bson.M{"accessLevel": r}}
 	err := c.Update(&q, &u)
 	if err != nil {
 		return err

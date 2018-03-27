@@ -56,3 +56,25 @@ type UserLeaderBoard struct {
 	Level                   int    `json:"level"`
 	PreviousLevelFinishTime string `json:"previous_level"`
 }
+
+type TickerRes struct {
+	Payload struct {
+				CurrentAuction struct {
+								   ID        string `json:"Id"`
+								   FirstName string `json:"FirstName"`
+								   LastName  string `json:"LastName"`
+								   Email     string `json:"Email"`
+								   Image     string `json:"Image"`
+								   Status    string `json:"Status"`
+								   UpdatedAt int64    `json:"UpdatedAt"`
+							   } `json:"current_auction"`
+				TeamList       interface{} `json:"team_list"`
+				AuctionHistory []AuctionHistoryRes `json:"auction_history"`
+			} `json:"payload"`
+}
+
+type AuctionHistoryRes struct {
+	UserID string `json:"user_id"`
+	TeamID string `json:"team_id"`
+	At     int64 `json:"at"`
+}

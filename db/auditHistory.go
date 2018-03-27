@@ -22,3 +22,16 @@ func InsertAuctionHistory(ah *AuctionHistory) error {
 	}
 	return nil
 }
+
+func FetchAuctionHistory() (*[]AuctionHistory, error){
+	s := GetSession()
+	defer s.Close()
+	c := s.DB(DB).C(AuctionHistoryColl)
+
+	var auctionHistory []AuctionHistory
+	err := c.Find(nil).Sort("-uat").Limit(5).All(&auctionHistory)
+	if err != nil {
+		return &[]AuctionHistory{}, err
+	}
+	return &auctionHistory, nil
+}
