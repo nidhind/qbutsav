@@ -76,5 +76,24 @@ if len(u)>0{
 		r.Payload.AuctionHistory = append(r.Payload.AuctionHistory, t)
 	}
 
+	// Get total user count
+	count, err:= db.GetUserCount()
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"status":  "error",
+			"code":    "500",
+			"message": "Internal server error",
+		})
+		return
+	}
+	r.Payload.TotalUsers=count
+
+	// Get auctioned
+	au:=0
+	for _,v:=range *t{
+		au=au+len(v.AccquiredMembers)
+	}
+	r.Payload.AuctionedUsers=au
+
 	c.JSON(http.StatusOK, &r)
 }

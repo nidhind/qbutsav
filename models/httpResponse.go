@@ -70,6 +70,8 @@ type TickerRes struct {
 							   } `json:"current_auction"`
 				TeamList       interface{} `json:"team_list"`
 				AuctionHistory []AuctionHistoryRes `json:"auction_history"`
+				TotalUsers int `json:"total_users"`
+				AuctionedUsers int `json:"auctioned_users"`
 			} `json:"payload"`
 }
 

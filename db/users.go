@@ -76,3 +76,15 @@ func UpdateUserStatusById(id string, st string, pt int) error {
 	}
 	return nil
 }
+
+func GetUserCount() (int, error) {
+	s := GetSession()
+	defer s.Close()
+	c := s.DB(DB).C(UsersColl)
+
+	total, err := c.Count()
+	if err != nil {
+		return 0, err
+	}
+	return total, nil
+}
