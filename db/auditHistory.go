@@ -7,6 +7,7 @@ type AuctionHistory struct {
 	TeamID     string `bson:"team_id"`
 	TeamPoints int `bson:"team_points"`
 	UserPoints int `bson:"user_points"`
+	Action string `bson:"action"`
 	At         int64 `bson:"at"`
 }
 

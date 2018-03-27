@@ -73,3 +73,20 @@ func UpdateTeamById(t *Team) error {
 	}
 	return nil
 }
+
+func DeallocateUserById(t *Team, u *User) error {
+	s := GetSession()
+	defer s.Close()
+	c := s.DB(DB).C(TeamsColl)
+
+	q := bson.M{"id": t.ID}
+	d := bson.M{
+		"$pull":bson.M{"accquiredMembers":bson.M{"id":u.Id}},
+		"$set":bson.M{"points":t.Points},
+	}
+	err := c.Update(&q, d)
+	if err != nil {
+		return err
+	}
+	return nil
+}

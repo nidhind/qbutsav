@@ -12,14 +12,16 @@ func mountRoutes(app *gin.Engine) {
 	app.GET("/status", statusHandler)
 
 	// Get team profile
-	app.GET("/teams", getTeamProfiles)
+	app.GET("/teams",authenticateToken, getTeamProfiles)
 	// Add new team
 	app.POST("/teams",authenticateToken, createNewTeam)
 	// Allocate user to a team
 	app.PUT("/teams/user", authenticateToken,allocateUserToTeam)
+	// de-allocate user from a team
+	app.DELETE("/teams/user", authenticateToken,deallocateUserFromTeam)
 
 	// Get users list
-	app.GET("/users",getUserProfiles)
+	app.GET("/users", authenticateToken, getUserProfiles)
 	// Lock user for auction
 	app.GET("/users/lock/:id",authenticateToken, lockUserById)
 	// Un-lock user for auction
