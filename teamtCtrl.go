@@ -108,7 +108,7 @@ func allocateUserToTeam(c *gin.Context) {
 	}
 	id := allocateReq.UserId
 	team := allocateReq.TeamId
-	points:=allocateReq.Points
+	points := allocateReq.Points
 
 	// Check if user exists
 	u, err := db.GetUserById(id)
@@ -164,7 +164,7 @@ func allocateUserToTeam(c *gin.Context) {
 		}
 		break
 	}
-	if err!=nil && err.Error() == "already_allocated" {
+	if err != nil && err.Error() == "already_allocated" {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"status":  "error",
 			"code":    "400",
@@ -207,7 +207,7 @@ func allocateUserToTeam(c *gin.Context) {
 		return
 	}
 
-	ah:=db.AuctionHistory{
+	ah := db.AuctionHistory{
 		UserID:u.Id,
 		UserName:fmt.Sprintf("%s %s", u.FirstName, u.LastName),
 		TeamID:t.ID,
@@ -281,10 +281,10 @@ func deallocateUserFromTeam(c *gin.Context) {
 	for _, au := range t.AccquiredMembers {
 		if au.Id == u.Id {
 			err = nil
+			break
 		}
-		break
 	}
-	if err!=nil && err.Error() == "not_allocated_herwe" {
+	if err != nil && err.Error() == "not_allocated_herwe" {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"status":  "error",
 			"code":    "400",
@@ -305,7 +305,7 @@ func deallocateUserFromTeam(c *gin.Context) {
 		UpdatedAt:time.Now().Unix(),
 	})
 	// Update Teams
-	err = db.DeallocateUserById(t,&u)
+	err = db.DeallocateUserById(t, &u)
 	if err != nil {
 		fmt.Println(err)
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
@@ -327,7 +327,7 @@ func deallocateUserFromTeam(c *gin.Context) {
 		return
 	}
 
-	ah:=db.AuctionHistory{
+	ah := db.AuctionHistory{
 		UserID:u.Id,
 		UserName:fmt.Sprintf("%s %s", u.FirstName, u.LastName),
 		TeamID:t.ID,
