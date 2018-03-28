@@ -11,9 +11,13 @@ import (
 )
 
 func main() {
-
-	db.InitMongo()
+	if len(os.Args) !=3{
+		log.Fatalln("Please provide filepath as argument 1 " +
+			"and profile image base path as argument 2")
+	}
 	filePath:=os.Args[1]
+	PROFILE_IMG_BASE_URL:=os.Args[2]
+	db.InitMongo()
 	csvFile, _ := os.Open(filePath)
 	reader := csv.NewReader(bufio.NewReader(csvFile))
 	c := 0
@@ -32,6 +36,7 @@ func main() {
 			FirstName:line[2],
 			LastName: line[3],
 			Email:line[1],
+			Image: fmt.Sprintf("%s/%s.jpg", PROFILE_IMG_BASE_URL,line[0]),
 			Status:"waiting",
 		}
 		err = db.InsertNewUser(&u)

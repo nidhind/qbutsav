@@ -1,5 +1,7 @@
 package db
 
+import "gopkg.in/mgo.v2/bson"
+
 const UsersColl = "users"
 
 // User schema for users collection
@@ -21,7 +23,7 @@ func InsertNewUser(u *User) error {
 	s := GetSession()
 	defer s.Close()
 	c := s.DB(DB).C(UsersColl)
-	err := c.Insert(u)
+	_, err := c.Upsert(bson.M{"id":u.Id}, &u)
 	if err != nil {
 		return err
 	}
