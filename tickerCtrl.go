@@ -23,14 +23,28 @@ func tickerHandler(c *gin.Context) {
 	tr := []models.TeamProfile{}
 
 	for _, v := range *t {
+
+		am:=[]db.TeamMembers{}
+		for _,mem:=range v.AccquiredMembers{
+			cm:=db.TeamMembers{
+				Id:mem.FirstName,
+				FirstName:mem.FirstName,
+				LastName:mem.LastName,
+				Email:mem.Email,
+				Image:mem.Image,
+				UpdatedAt:mem.UpdatedAt,
+			}
+			am=append(am,cm)
+		}
 		tr = append(tr, models.TeamProfile{
 			ID : v.ID,
 			Name : v.Name,
 			Captain : v.Captain,
 			Owner : v.Owner,
-			AccquiredMembers : v.AccquiredMembers,
+			AccquiredMembers : am,
 			RelievedMembers : v.RelievedMembers,
 		})
+
 	}
 
 	r := models.TickerRes{}
