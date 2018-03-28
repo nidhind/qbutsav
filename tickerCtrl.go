@@ -73,6 +73,7 @@ if len(u)>0{
 		t.TeamName=v.TeamName
 		t.TeamID = v.TeamID
 		t.At=v.At
+		t.Action=v.Action
 		r.Payload.AuctionHistory = append(r.Payload.AuctionHistory, t)
 	}
 

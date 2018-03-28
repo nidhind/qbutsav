@@ -80,5 +80,6 @@ type AuctionHistoryRes struct {
 	UserName string `json:"user_name"`
 	TeamID string `json:"team_id"`
 	TeamName string `json:"team_name"`
+	Action string `json:"action"`
 	At     int64 `json:"at"`
 }

@@ -209,10 +209,12 @@ func allocateUserToTeam(c *gin.Context) {
 
 	ah:=db.AuctionHistory{
 		UserID:u.Id,
+		UserName:fmt.Sprintf("%s %s", u.FirstName, u.LastName),
 		TeamID:t.ID,
+		TeamName:t.Name,
 		TeamPoints:t.Points,
-		UserPoints:points,
-		Action: "allocation",
+		UserPoints:u.Points,
+		Action:"allocation",
 		At:time.Now().Unix(),
 	}
 	go db.InsertAuctionHistory(&ah)

@@ -31,7 +31,7 @@ func FetchAuctionHistory() (*[]AuctionHistory, error){
 	c := s.DB(DB).C(AuctionHistoryColl)
 
 	var auctionHistory []AuctionHistory
-	err := c.Find(nil).Sort("-uat").Limit(5).All(&auctionHistory)
+	err := c.Find(nil).Sort("-at").Limit(5).All(&auctionHistory)
 	if err != nil {
 		return &[]AuctionHistory{}, err
 	}
