@@ -1,54 +1,43 @@
 package main
 
 import (
-	"io"
 	"os"
-	"time"
-
-	"github.com/gin-contrib/cors"
-	"github.com/gin-gonic/gin"
-
+	"bufio"
+	"io"
+	"log"
+	"fmt"
+	"encoding/csv"
 	"github.com/nidhind/qbutsav/db"
-	"github.com/nidhind/qbutsav/utils"
 )
-
-var startUpTime time.Time = time.Now()
-var GO_ENV=os.Getenv("GO_ENV")
 
 func main() {
 
-	// Initialize database
 	db.InitMongo()
+	filePath:=os.Args[1]
+	csvFile, _ := os.Open(filePath)
+	reader := csv.NewReader(bufio.NewReader(csvFile))
+	c := 0
+	for {
+		line, err := reader.Read()
+		if err == io.EOF {
+			break
+		} else if err != nil {
+			log.Panicln(err)
+		}
+		c++
+		fmt.Println(c)
 
-	// Set production variables
-	if GO_ENV=="production"{
-		gin.SetMode(gin.ReleaseMode)
+		u := db.User{
+			Id:line[0],
+			FirstName:line[2],
+			LastName: line[3],
+			Email:line[1],
+			Status:"waiting",
+		}
+		err = db.InsertNewUser(&u)
+		if err != nil {
+			fmt.Println("Error at ", c, err)
+		}
 	}
-
-	api := gin.New()
-
-	// Logging to a file.
-	ginLogFilePath := utils.GetGinLogFilePath()
-	f, _ := os.OpenFile(ginLogFilePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	gin.DefaultWriter = io.MultiWriter(f, os.Stdout)
-
-	// Prevent redirects on trailing slashes
-	api.RedirectTrailingSlash = false
-
-	// Enable Logger
-	api.Use(gin.Logger())
-
-	// Enable CROS
-	corsConfig := cors.DefaultConfig()
-	corsConfig.AllowAllOrigins = true
-	corsConfig.AddAllowHeaders("Authorization")
-	corsConfig.AddAllowMethods("PATCH")
-	api.Use(cors.New(corsConfig))
-
-	// Mount API routes
-	mountRoutes(api)
-
-	// Default port is 8080
-	// To override set PORT env variable
-	api.Run()
+	fmt.Println("Completed ", c)
 }
