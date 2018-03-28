@@ -21,7 +21,7 @@ type TeamMembers struct {
 	LastName  string    `bson:"lastName"`
 	Email     string    `bson:"email"`
 	Image     string  `bson:"image"`
-	Point     int `bson:"point" json:",omitempty"`
+	Point     int `bson:"point"`
 	UpdatedAt int64 `bson:"updatedAt"`
 }
 
